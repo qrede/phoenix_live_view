@@ -267,7 +267,8 @@ let uploadFiles = (ctx, files, callback) => {
         let file = files[key]
         const uploadChunk = (chunk, finished, uploaded) => {
           if (!finished) {
-            ctx.pushWithReply("upload_progress", {path: key, size: file.size, uploaded})
+            const percentage = Math.round((uploaded / file.size) * 100);
+            ctx.pushWithReply("upload_progress", {path: key, size: file.size, uploaded, percentage})
           }
 
           uploadChannel.push("file", {file: chunk})

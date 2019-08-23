@@ -85,9 +85,9 @@ defmodule Phoenix.LiveView.Channel do
   end
 
   def handle_info(%Message{topic: topic, event: "upload_progress"} = msg, %{topic: topic} = state) do
-    %{"path" => path, "size" => size, "uploaded" => uploaded} = msg.payload
+    %{"path" => path} = msg.payload
     event = "upload_progress"
-    val = Plug.Conn.Query.decode_pair({path, %{"size" => size, "uploaded" => uploaded}}, %{})
+    val = Plug.Conn.Query.decode_pair({path, Map.take(msg.payload, ["size", "uploaded", "percentage"])}, %{})
 
     event
     |> view_module(state).handle_event(val, state.socket)
